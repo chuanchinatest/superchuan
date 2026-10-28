@@ -3,8 +3,9 @@ import { nextLeg, WheelGate } from './motion-state.mjs';
 import { SceneContent } from './SceneContent.jsx';
 
 const scenes=['开场','关于我','工具与经历'];
-const clips={'0-1':'/media/intro-about.mp4?v=native2160-v2','1-0':'/media/intro-about-reverse.mp4?v=native2160-v2','1-2':'/media/about-tools.mp4?v=native2160-v2','2-1':'/media/about-tools-reverse.mp4?v=native2160-v2'};
-const posters=[1,2,3].map(n=>`/media/scene-${n}.webp?v=native2160-v2`);
+const base=import.meta.env.BASE_URL;
+const clips={'0-1':`${base}media/intro-about.mp4?v=native2160-v2`,'1-0':`${base}media/intro-about-reverse.mp4?v=native2160-v2`,'1-2':`${base}media/about-tools.mp4?v=native2160-v2`,'2-1':`${base}media/about-tools-reverse.mp4?v=native2160-v2`};
+const posters=[1,2,3].map(n=>`${base}media/scene-${n}.webp?v=native2160-v2`);
 
 function waitForMedia(video,event,ready) {
   if(video.error)return Promise.reject(new Error('视频无法加载'));
@@ -112,7 +113,7 @@ export function App() {
       <nav className="scene-dots" aria-label="场景选择">
         {scenes.map((name,index)=><button key={name} className={scene===index?'active':''} aria-label={name} aria-current={scene===index?'step':undefined} data-pending={busy&&target===index} onClick={()=>request(index)}>0{index+1}</button>)}
       </nav>
-      <button className="next-cue" onClick={advance} aria-label={scene===2?'重新播放':'进入下一个画面'}><span>{scene===2?'重新播放':'进入下一个画面'}</span><img src="/media/arrow-down.svg" alt=""/></button>
+      <button className="next-cue" onClick={advance} aria-label={scene===2?'重新播放':'进入下一个画面'}><span>{scene===2?'重新播放':'进入下一个画面'}</span><img src={`${base}media/arrow-down.svg`} alt=""/></button>
     </footer>
     <div className="media-notice" role="status" aria-live="polite">
       {error?<><span>{error}</span><button onClick={()=>{Object.values(media.current).forEach(v=>{if(v?.error)v.load();});request(failedTarget.current);}}>重试</button></>:preparing?<span>正在准备画面</span>:null}
